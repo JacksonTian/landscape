@@ -1,12 +1,12 @@
 (function ($, global) {
-  var View = function (selector, callback) {
-    if (!(this instanceof View)) {
-      return new View(selector, callback);
+  var Tile = function (selector, callback) {
+    if (!(this instanceof Tile)) {
+      return new Tile(selector, callback);
     }
     this.ready(selector, callback);
   };
 
-  View.prototype.ready = function (selector, callback) {
+  Tile.prototype.ready = function (selector, callback) {
     var view = this;
     $(function () {
       view.element = $(selector);
@@ -14,15 +14,14 @@
     });
     return this;
   };
-  View.prototype.$ = function (selector) {
+  Tile.prototype.$ = function (selector) {
     return this.element.find(selector);
   };
 
-  View.prototype.delegate = function (selector, events, handler) {
+  Tile.prototype.delegate = function (selector, events, handler) {
     this.element.delegate(selector, events, handler);
     return this;
   };
 
-  global.View = View;
+  global.Tile = Tile;
 }(jQuery, window));
-
