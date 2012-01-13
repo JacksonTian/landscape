@@ -10,7 +10,11 @@
     var view = this;
     $(function () {
       view.element = $(selector);
-      callback(view);
+      if (view.element.size()) {
+        callback(view);
+      } else {
+        console.log(selector + " block doesn't exist.");
+      }
     });
     return this;
   };
