@@ -19,7 +19,7 @@
     return this;
   };
   Tile.prototype.$ = function (selector) {
-    return this.element.find(selector);
+    return $(selector, this.element);
   };
 
   Tile.prototype.delegate = function (selector, events, handler) {
