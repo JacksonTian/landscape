@@ -29,3 +29,26 @@
 
   global.Land = Land;
 }(jQuery, window));
+
+(function (global) {
+  var Scape = function () {
+    this._proxy = new EventProxy();
+  };
+
+  Scape.prototype.ready = function (key, callback) {
+    if (this.hasOwnProperty(key)) {
+      callback({"newVal": this[key]});
+    }
+    this._proxy.bind(key, callback);
+  };
+
+  Scape.prototype.set = function (key, value) {
+    var oldValue = this[key];
+    this[key] = value;
+    this._proxy.fire(key, {"oldVal": oldValue, "newVal": value});
+    return this;
+  };
+
+  global.Scape = Scape;
+}(window));
+
