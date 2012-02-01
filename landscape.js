@@ -27,6 +27,10 @@
     return this;
   };
 
+  Land.prototype.getTemplate = function (id) {
+    return $("#template_" + id).html();
+  };
+
   global.Land = Land;
 }(jQuery, window));
 
