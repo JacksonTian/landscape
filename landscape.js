@@ -46,6 +46,10 @@
     this._proxy.bind(key, callback);
   };
 
+  Scape.prototype.unbind = function (key, callback) {
+    this._proxy.unbind(key, callback);
+  };
+
   Scape.prototype.set = function (key, value) {
     var oldValue = this[key];
     this[key] = value;
