@@ -95,5 +95,10 @@
     return key ? this.data[key] : this.data;
   };
 
+  Scape.prototype.remove = function (key) {  
+    delete this.data[key];  
+    return this;  
+  };
+
   global.Scape = Scape;
 }(window));
