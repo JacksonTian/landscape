@@ -1,3 +1,4 @@
+/*global EventProxy*/
 (function ($, global) {
   var Landscape = function () {
     this.version = "0.0.1";
@@ -77,6 +78,11 @@
     }
   });
 
+  /**
+   * ready方法以key绑定事件，如果该值已经被设置过，回调函数将会立即触发一次
+   * @param {String} key 数据键名
+   * @param {Function} callback 回调函数
+   */
   Scape.prototype.ready = function (key, callback) {
     if (this.data.hasOwnProperty(key)) {
       callback({"newVal": this.data[key]});
@@ -84,6 +90,11 @@
     this.bind(key, callback);
   };
 
+  /**
+   * 设置数据到Scape对象上，会以key触发一个事件。传递值为oldVal和newVal，新旧值
+   * @param {String} key 数据键名
+   * @param {Mix} value 数据值
+   */
   Scape.prototype.set = function (key, value) {
     var oldValue = this.data[key];
     this.data[key] = value;
@@ -95,9 +106,9 @@
     return key ? this.data[key] : this.data;
   };
 
-  Scape.prototype.remove = function (key) {  
-    delete this.data[key];  
-    return this;  
+  Scape.prototype.remove = function (key) {
+    delete this.data[key];
+    return this;
   };
 
   global.Scape = Scape;
