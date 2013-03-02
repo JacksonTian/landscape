@@ -1,8 +1,10 @@
 /*global EventProxy*/
-(function ($, global) {
+(function (global) {
+  var $ = global.jQuery || global.Zepto;
   var Landscape = function () {
-    this.version = "0.0.1";
+    this.version = "0.0.2";
   };
+
   /**
    * 继承
    * @param {Function} parent 父类
@@ -31,23 +33,24 @@
   };
 
   global.Landscape = Landscape;
-}(jQuery, window));
 
-(function ($, global) {
+  /**
+   * Land定义，是对jQuery的简单封装，用于约束DOM操作在一个确定的视图内进行
+   */
   var Land = function (selector, callback) {
     if (!(this instanceof Land)) {
       return new Land(selector, callback);
     }
-    this.ready(selector, callback);
+    return this.ready(selector, callback);
   };
 
   Land.prototype.ready = function (selector, callback) {
     var view = this;
     // When document ready
     $(function () {
-      view.element = $(selector);
-      if (view.element.size()) {
-        callback(view);
+      view.el = $(selector);
+      if (view.el.size()) {
+        callback.call(view, view);
       } else {
         throw new Error(selector + " block doesn't exist.");
       }
@@ -55,23 +58,26 @@
     return this;
   };
 
+  /**
+   * 从当前Land视图查找元素
+   */
   Land.prototype.$ = function (selector) {
-    return $(selector, this.element);
+    return $(selector, this.el);
   };
 
+  /**
+   * 给前Land视图委托事件
+   */
   Land.prototype.delegate = function (selector, events, handler) {
-    this.element.delegate(selector, events, handler);
+    this.el.delegate(selector, events, handler);
     return this;
   };
 
-  Land.prototype.getTemplate = function (id) {
-    return $("#template_" + id).html();
-  };
-
   global.Land = Land;
-}(jQuery, window));
 
-(function (global) {
+  /**
+   * 数据层定义
+   */
   var Scape = Landscape.extend(EventProxy, {
     initialize: function (data) {
       this.data = data || {};
@@ -102,10 +108,21 @@
     return this;
   };
 
-  Scape.prototype.get = function (key) {
-    return key ? this.data[key] : this.data;
+  /**
+   * 获取Scape的值
+   */
+  Scape.prototype.get = function (key, formatter) {
+    var val = key ? this.data[key] : this.data;
+    if (typeof formatter === 'function') {
+      return formatter(val);
+    } else {
+      return val;
+    }
   };
 
+  /**
+   * 删除
+   */
   Scape.prototype.remove = function (key) {
     delete this.data[key];
     return this;
