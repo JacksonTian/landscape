@@ -45,16 +45,21 @@
   };
 
   Land.prototype.ready = function (selector, callback) {
-    var view = this;
-    // When document ready
-    $(function () {
-      view.el = $(selector);
-      if (view.el.size()) {
-        callback.call(view, view);
-      } else {
-        throw new Error(selector + " block doesn't exist.");
-      }
-    });
+    this.el = $(selector);
+    if (this.el.length) {
+      callback && callback(this);
+    } else {
+      // When document ready
+      var view = this;
+      $(function () {
+        view.el = $(selector);
+        if (view.el.size()) {
+          callback && callback(view);
+        } else {
+          throw new Error(selector + " block doesn't exist.");
+        }
+      });
+    }
     return this;
   };
 
@@ -73,8 +78,11 @@
     return this;
   };
 
-  global.Land = Land;
+  Land.prototype.getTemplate = function (id) {
+    return $("#template_" + id).html();
+  };
 
+  global.Land = Land;
   /**
    * 数据层定义
    */
@@ -94,6 +102,7 @@
       callback({"newVal": this.data[key]});
     }
     this.bind(key, callback);
+    return this;
   };
 
   /**
@@ -113,11 +122,7 @@
    */
   Scape.prototype.get = function (key, formatter) {
     var val = key ? this.data[key] : this.data;
-    if (typeof formatter === 'function') {
-      return formatter(val);
-    } else {
-      return val;
-    }
+    return (typeof formatter === 'function') ? formatter(val) : val;
   };
 
   /**
@@ -128,5 +133,38 @@
     return this;
   };
 
+  // 无需键值的Scape对象
+  var _Scape = function () {
+    this.key = 'no_key';
+    this.scape = new Scape();
+  };
+
+  _Scape.prototype.set = function (val) {
+    this.scape.set(this.key, val);
+    return this;
+  };
+
+  _Scape.prototype.get = function (formatter) {
+    return this.scape.get(this.key, formatter);
+  };
+
+  _Scape.prototype.ready = function (callback) {
+    this.scape.ready(this.key, callback);
+    return this;
+  };
+
+  _Scape.prototype.remove = function () {
+    this.scape.remove(this.key);
+    return this;
+  };
+
+  /**
+   * 返回一个无需键值的Scape对象
+   */
+  Scape.sample = function () {
+    return new _Scape();
+  };
+
   global.Scape = Scape;
+
 }(window));
