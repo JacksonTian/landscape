@@ -1,8 +1,8 @@
-/*global EventProxy*/
+/*global EventProxy, window*/
 (function (global) {
   var $ = global.jQuery || global.Zepto;
   var Landscape = function () {
-    this.version = "0.0.2";
+    this.version = "0.0.3";
   };
 
   /**
@@ -33,7 +33,10 @@
   };
 
   global.Landscape = Landscape;
+}(window));
 
+(function (global) {
+  var $ = global.$;
   /**
    * Land定义，是对jQuery的简单封装，用于约束DOM操作在一个确定的视图内进行
    */
@@ -45,21 +48,18 @@
   };
 
   Land.prototype.ready = function (selector, callback) {
-    this.el = $(selector);
-    if (this.el.length) {
-      callback && callback(this);
-    } else {
-      // When document ready
-      var view = this;
-      $(function () {
-        view.el = $(selector);
-        if (view.el.size()) {
-          callback && callback(view);
-        } else {
-          throw new Error(selector + " block doesn't exist.");
+    var view = this;
+    // When document ready
+    $(function () {
+      view.element = $(selector);
+      if (view.element.size()) {
+        if (typeof callback === 'function') {
+          callback(view);
         }
-      });
-    }
+      } else {
+        throw new Error(selector + " block doesn't exist.");
+      }
+    });
     return this;
   };
 
@@ -67,22 +67,21 @@
    * 从当前Land视图查找元素
    */
   Land.prototype.$ = function (selector) {
-    return $(selector, this.el);
+    return $(selector, this.element);
   };
 
   /**
    * 给前Land视图委托事件
    */
   Land.prototype.delegate = function (selector, events, handler) {
-    this.el.delegate(selector, events, handler);
+    this.element.delegate(selector, events, handler);
     return this;
   };
 
-  Land.prototype.getTemplate = function (id) {
-    return $("#template_" + id).html();
-  };
-
   global.Land = Land;
+}(window));
+
+(function (global) {
   /**
    * 数据层定义
    */
@@ -102,6 +101,45 @@
       callback({"newVal": this.data[key]});
     }
     this.bind(key, callback);
+    return this;
+  };
+
+  /**
+   * 当多个属性ready或者改变时触发
+   */
+  Scape.prototype.multi = function () {
+    var data = this.data;
+    var keys = [].slice.call(arguments, 0, -1);
+    var callback = arguments[arguments.length - 1];
+    if (typeof callback !== 'function') {
+      throw new Error('最后一个参数必须是函数');
+    }
+
+    var check = function () {
+      var trigger = true;
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        if (!data.hasOwnProperty(key)) {
+          trigger = false;
+          break;
+        }
+      }
+      if (trigger) {
+        var values = [];
+        for (var j = 0; j < keys.length; j++) {
+          values.push(data[keys[j]]);
+        }
+        callback.apply(null, values);
+      }
+    };
+
+    // 立即检查一次
+    check();
+
+    for (var k = 0; k < keys.length; k++) {
+      this.bind(keys[k], check);
+    }
+    // for chain
     return this;
   };
 
@@ -128,43 +166,13 @@
   /**
    * 删除
    */
-  Scape.prototype.remove = function (key) {
+  Scape.prototype.remove = function (key, callback) {
     delete this.data[key];
+    if (callback) {
+      this.unbind(key, callback);
+    }
     return this;
-  };
-
-  // 无需键值的Scape对象
-  var _Scape = function () {
-    this.key = 'no_key';
-    this.scape = new Scape();
-  };
-
-  _Scape.prototype.set = function (val) {
-    this.scape.set(this.key, val);
-    return this;
-  };
-
-  _Scape.prototype.get = function (formatter) {
-    return this.scape.get(this.key, formatter);
-  };
-
-  _Scape.prototype.ready = function (callback) {
-    this.scape.ready(this.key, callback);
-    return this;
-  };
-
-  _Scape.prototype.remove = function () {
-    this.scape.remove(this.key);
-    return this;
-  };
-
-  /**
-   * 返回一个无需键值的Scape对象
-   */
-  Scape.sample = function () {
-    return new _Scape();
   };
 
   global.Scape = Scape;
-
 }(window));
