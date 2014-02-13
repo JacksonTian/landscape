@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>landscape.js</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <script src="assets/prettify.js"></script>
+  <link rel="stylesheet" type="text/css" href="assets/doxco.css" />
+</head>
+<body>
+<div id="container">
+  <div id="background"></div>
+  <ul class="sections">
+    <li id="title">
+      <div class="docs">
+        <h1>landscape.js</h1>
+      </div>
+    </li>
+  
+    <li id="section-1">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-1" class="pilcrow">&#182;</a>
+        </div>
+        <p>Landscape</p>
+      </div>
+      
+      <div class="code">
+        <pre>(function (global) {
+</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-2">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-2" class="pilcrow">&#182;</a>
+        </div>
+        <p>jQuery或者Zepto的引用</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>  var $ = global.jQuery || global.Zepto;</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-3">
+      <div class="docs">
+        
+        <div class="pilwrap for-h2">
+          <a href="#section-3" class="pilcrow">&#182;</a>
+        </div>
+        <h2>Landscape</h2>
+      </div>
+      
+    </li>
+  
+    <li id="section-4">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-4" class="pilcrow">&#182;</a>
+        </div>
+        <p>Landscape基础对象</p>
+      </div>
+      
+      <div class="code">
+        <pre>var Landscape = function () {
+    this.version = "0.0.3";
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-5">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-5" class="pilcrow">&#182;</a>
+        </div>
+        <p>继承方法，用于类的继承</p>
+      </div>
+      
+      <div class="code">
+        <pre>Landscape.extend = function (parent, properties) {
+    if (typeof parent !== "function") {
+      properties = parent;
+      parent = function () {};
+    }
+
+    properties = properties || {};
+    var sub = function () {</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-6">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-6" class="pilcrow">&#182;</a>
+        </div>
+        <p>Call the parent constructor.</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>      parent.apply(this, arguments);</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-7">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-7" class="pilcrow">&#182;</a>
+        </div>
+        <p>Only call initialize in self constructor.</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>      if (this.constructor === parent && this.initialize) {
+        this.initialize.apply(this, arguments);
+      }
+    };
+    sub.prototype = new parent();
+    sub.prototype.constructor = parent;</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-8">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-8" class="pilcrow">&#182;</a>
+        </div>
+        <p>拷贝附加的属性到原型上</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    $.extend(sub.prototype, properties);</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-9">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-9" class="pilcrow">&#182;</a>
+        </div>
+        <p>返回子类</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    return sub;
+  };
+
+  global.Landscape = Landscape;</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-10">
+      <div class="docs">
+        
+        <div class="pilwrap for-h2">
+          <a href="#section-10" class="pilcrow">&#182;</a>
+        </div>
+        <h2>Land 视图对象</h2>
+      </div>
+      
+    </li>
+  
+    <li id="section-11">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-11" class="pilcrow">&#182;</a>
+        </div>
+        <p>Land定义，是对jQuery的简单封装，用于约束DOM操作在一个确定的视图内进行</p>
+      </div>
+      
+      <div class="code">
+        <pre>var Land = function (selector, callback) {
+    if (!(this instanceof Land)) {
+      return new Land(selector, callback);
+    }
+    return this.ready(selector, callback);
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-12">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-12" class="pilcrow">&#182;</a>
+        </div>
+        <p>当视图准备就绪的时候执行注册的回调函数。<br />回调函数构成一个密闭的作用域，相关的业务逻辑都被作用域隔离，以此实现逻辑的分割和封装</p>
+      </div>
+      
+      <div class="code">
+        <pre>Land.prototype.ready = function (selector, callback) {
+    var view = this;</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-13">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-13" class="pilcrow">&#182;</a>
+        </div>
+        <p>When document ready</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    $(function () {
+      view.element = $(selector);
+      if (view.element.size()) {
+        if (typeof callback === 'function') {
+          callback(view);
+        }
+      } else {
+        throw new Error(selector + " block doesn't exist.");
+      }
+    });
+    return this;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-14">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-14" class="pilcrow">&#182;</a>
+        </div>
+        <p>从当前Land视图查找元素，由于查找限定在了当前视图中，所以可以杜绝跨视图访问等问题</p>
+      </div>
+      
+      <div class="code">
+        <pre>Land.prototype.$ = function (selector) {
+    return $(selector, this.element);
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-15">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-15" class="pilcrow">&#182;</a>
+        </div>
+        <p>给前Land视图委托事件，采用事件委托可以很好的提升性能。<br />同时DOM的修改不影响事件的绑定，注册的逻辑可以比较固定。</p>
+      </div>
+      
+      <div class="code">
+        <pre>Land.prototype.delegate = function (selector, events, handler) {
+    this.element.delegate(selector, events, handler);
+    return this;
+  };
+
+  global.Land = Land;</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-16">
+      <div class="docs">
+        
+        <div class="pilwrap for-h2">
+          <a href="#section-16" class="pilcrow">&#182;</a>
+        </div>
+        <h2>Scape 数据对象</h2>
+      </div>
+      
+    </li>
+  
+    <li id="section-17">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-17" class="pilcrow">&#182;</a>
+        </div>
+        <p>数据层定义</p>
+      </div>
+      
+      <div class="code">
+        <pre>var Scape = Landscape.extend(EventProxy, {
+    initialize: function (data) {
+      this.data = data || {};
+    }
+  });</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-18">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-18" class="pilcrow">&#182;</a>
+        </div>
+        <p>ready方法以key绑定事件，如果该值已经被设置过，回调函数将会立即触发一次</p>
+      </div>
+      
+      <div class="code">
+        <pre>Scape.prototype.ready = function (key, callback) {
+    if (this.data.hasOwnProperty(key)) {
+      callback({"newVal": this.data[key]});
+    }
+    this.bind(key, callback);
+    return this;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-19">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-19" class="pilcrow">&#182;</a>
+        </div>
+        <p>当多个属性ready或者改变时触发</p>
+      </div>
+      
+      <div class="code">
+        <pre>Scape.prototype.multi = function () {
+    var data = this.data;
+    var keys = [].slice.call(arguments, 0, -1);
+    var callback = arguments[arguments.length - 1];
+    if (typeof callback !== 'function') {
+      throw new Error('最后一个参数必须是函数');
+    }
+
+    var check = function () {
+      var trigger = true;
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        if (!data.hasOwnProperty(key)) {
+          trigger = false;
+          break;
+        }
+      }
+      if (trigger) {
+        var values = [];
+        for (var j = 0; j < keys.length; j++) {
+          values.push(data[keys[j]]);
+        }
+        callback.apply(null, values);
+      }
+    };
+</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-20">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-20" class="pilcrow">&#182;</a>
+        </div>
+        <p>立即检查一次</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    check();
+</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-21">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-21" class="pilcrow">&#182;</a>
+        </div>
+        <p>为选中的属性绑定事件</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    for (var k = 0; k < keys.length; k++) {
+      this.bind(keys[k], check);
+    }</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-22">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-22" class="pilcrow">&#182;</a>
+        </div>
+        <p>for chain call</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    return this;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-23">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-23" class="pilcrow">&#182;</a>
+        </div>
+        <p>设置数据到Scape对象上，会以key触发一个事件。传递值为oldVal和newVal，新旧值</p>
+      </div>
+      
+      <div class="code">
+        <pre>Scape.prototype.set = function (key, value) {
+    var oldValue = this.data[key];
+    this.data[key] = value;
+    this.fire(key, {"oldVal": oldValue, "newVal": value});
+    return this;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-24">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-24" class="pilcrow">&#182;</a>
+        </div>
+        <p>获取数据对象的属性值<br />如果传入formatter函数，则返回格式化的函数</p>
+      </div>
+      
+      <div class="code">
+        <pre>Scape.prototype.get = function (key, formatter) {
+    var val = key ? this.data[key] : this.data;
+    return (typeof formatter === 'function') ? formatter(val) : val;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-25">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-25" class="pilcrow">&#182;</a>
+        </div>
+        <p>删除数据对象的属性值</p>
+      </div>
+      
+      <div class="code">
+        <pre>Scape.prototype.remove = function (key, callback) {
+    delete this.data[key];
+    if (callback) {
+      this.unbind(key, callback);
+    }
+    return this;
+  };
+
+  global.Scape = Scape;
+}(window));</pre>
+      </div>
+      
+    </li>
+  
+  </ul>
+</div>
+</body>
+</html>
