@@ -4,8 +4,8 @@
   <title>landscape.js</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-  <script src="assets/prettify.js"></script>
   <link rel="stylesheet" type="text/css" href="assets/doxco.css" />
+  <link rel="stylesheet" type="text/css" href="assets/github.css" />
 </head>
 <body>
 <div id="container">
@@ -27,7 +27,7 @@
       </div>
       
       <div class="code">
-        <pre>(function (global) {
+        <pre>(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(global)</span> {</span>
 </pre>
       </div>
       
@@ -39,12 +39,12 @@
         <div class="pilwrap ">
           <a href="#section-2" class="pilcrow">&#182;</a>
         </div>
-        <p>jQuery或者Zepto的引用</p>
+        <p>获取jQuery或者Zepto的引用</p>
 
       </div>
       
       <div class="code">
-        <pre>  var $ = global.jQuery || global.Zepto;</pre>
+        <pre>  <span class="hljs-keyword">var</span> $ = <span class="hljs-keyword">global</span>.jQuery || <span class="hljs-keyword">global</span>.Zepto;</pre>
       </div>
       
     </li>
@@ -56,6 +56,8 @@
           <a href="#section-3" class="pilcrow">&#182;</a>
         </div>
         <h2>Landscape</h2>
+
+<p>Landscape由Land和Scape两个部分构成。一个是视图相关的简单模块，一个是基于消息的数据模型</p>
       </div>
       
     </li>
@@ -70,9 +72,7 @@
       </div>
       
       <div class="code">
-        <pre>var Landscape = function () {
-    this.version = "0.0.3";
-  };</pre>
+        <pre><span class="hljs-keyword">var</span> Landscape = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>};</pre>
       </div>
       
     </li>
@@ -87,14 +87,14 @@
       </div>
       
       <div class="code">
-        <pre>Landscape.extend = function (parent, properties) {
-    if (typeof parent !== "function") {
-      properties = parent;
-      parent = function () {};
+        <pre>Landscape.extend = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(parent, properties)</span> {</span>
+    <span class="hljs-keyword">if</span> (typeof <span class="hljs-keyword">parent</span> !== <span class="hljs-string">"function"</span>) {
+      properties = <span class="hljs-keyword">parent</span>;
+      <span class="hljs-keyword">parent</span> = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>};
     }
 
     properties = properties || {};
-    var sub = function () {</pre>
+    <span class="hljs-keyword">var</span> sub = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre>
       </div>
       
     </li>
@@ -110,7 +110,7 @@
       </div>
       
       <div class="code">
-        <pre>      parent.apply(this, arguments);</pre>
+        <pre>      parent.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</pre>
       </div>
       
     </li>
@@ -126,12 +126,12 @@
       </div>
       
       <div class="code">
-        <pre>      if (this.constructor === parent && this.initialize) {
+        <pre>      <span class="hljs-keyword">if</span> (this.constructor === parent &amp;&amp; this.initialize) {
         this.initialize.apply(this, arguments);
       }
     };
-    sub.prototype = new parent();
-    sub.prototype.constructor = parent;</pre>
+    <span class="hljs-sub"><span class="hljs-keyword">sub</span>.prototype = new parent();</span>
+    <span class="hljs-sub"><span class="hljs-keyword">sub</span>.prototype.constructor = parent;</span></pre>
       </div>
       
     </li>
@@ -147,7 +147,7 @@
       </div>
       
       <div class="code">
-        <pre>    $.extend(sub.prototype, properties);</pre>
+        <pre>    <span class="hljs-variable">$.</span>extend(<span class="hljs-sub"><span class="hljs-keyword">sub</span>.prototype, properties);</span></pre>
       </div>
       
     </li>
@@ -163,10 +163,9 @@
       </div>
       
       <div class="code">
-        <pre>    return sub;
+        <pre>    <span class="hljs-keyword">return</span> <span class="hljs-sub"><span class="hljs-keyword">sub</span>;</span>
   };
-
-  global.Landscape = Landscape;</pre>
+</pre>
       </div>
       
     </li>
@@ -174,10 +173,15 @@
     <li id="section-10">
       <div class="docs">
         
-        <div class="pilwrap for-h2">
+        <div class="pilwrap ">
           <a href="#section-10" class="pilcrow">&#182;</a>
         </div>
-        <h2>Land 视图对象</h2>
+        <p>挂载到全局中</p>
+
+      </div>
+      
+      <div class="code">
+        <pre><span class="hljs-attribute">  global.Landscape </span>=<span class="hljs-string"> Landscape;</span></pre>
       </div>
       
     </li>
@@ -185,19 +189,26 @@
     <li id="section-11">
       <div class="docs">
         
-        <div class="pilwrap ">
+        <div class="pilwrap for-h2">
           <a href="#section-11" class="pilcrow">&#182;</a>
         </div>
-        <p>Land定义，是对jQuery的简单封装，用于约束DOM操作在一个确定的视图内进行</p>
-      </div>
-      
-      <div class="code">
-        <pre>var Land = function (selector, callback) {
-    if (!(this instanceof Land)) {
-      return new Land(selector, callback);
-    }
-    return this.ready(selector, callback);
-  };</pre>
+        <h2>Land 视图对象</h2>
+
+<p>Land视图对象是通过将页面进行模块划分，同时形成独有的作用域，可以将视图的业务逻辑包含在其中。<br />无耦合的业务编码，业务改变或者删除时，直接将此块代码删除即可</p>
+
+<p>Example:</p>
+
+<div class="highlight"><pre lang="">Land('#header', function (view) {
+  var logo = view.$('.logo');
+  view.delegate('.logo', 'click', function (event) {
+    // Logo的click逻辑
+    logo.addClass('highlight');
+  });
+  view.delegate('.logout', 'click', function (event) {
+    // 退出逻辑
+  });
+});
+</pre></div>
       </div>
       
     </li>
@@ -208,12 +219,16 @@
         <div class="pilwrap ">
           <a href="#section-12" class="pilcrow">&#182;</a>
         </div>
-        <p>当视图准备就绪的时候执行注册的回调函数。<br />回调函数构成一个密闭的作用域，相关的业务逻辑都被作用域隔离，以此实现逻辑的分割和封装</p>
+        <p>Land定义，是对jQuery的简单封装，用于约束DOM操作在一个确定的视图内进行</p>
       </div>
       
       <div class="code">
-        <pre>Land.prototype.ready = function (selector, callback) {
-    var view = this;</pre>
+        <pre><span class="hljs-keyword">var</span> Land = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(selector, callback)</span> {</span>
+    <span class="hljs-keyword">if</span> (!(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> Land)) {
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Land(selector, callback);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.ready(selector, callback);
+  };</pre>
       </div>
       
     </li>
@@ -224,23 +239,12 @@
         <div class="pilwrap ">
           <a href="#section-13" class="pilcrow">&#182;</a>
         </div>
-        <p>When document ready</p>
-
+        <p>当视图准备就绪的时候执行注册的回调函数。<br />回调函数构成一个密闭的作用域，相关的业务逻辑都被作用域隔离，以此实现逻辑的分割和封装</p>
       </div>
       
       <div class="code">
-        <pre>    $(function () {
-      view.element = $(selector);
-      if (view.element.size()) {
-        if (typeof callback === 'function') {
-          callback(view);
-        }
-      } else {
-        throw new Error(selector + " block doesn't exist.");
-      }
-    });
-    return this;
-  };</pre>
+        <pre>Land.prototype.ready = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(selector, callback)</span> {</span>
+    <span class="hljs-keyword">var</span> view = <span class="hljs-keyword">this</span>;</pre>
       </div>
       
     </li>
@@ -251,12 +255,22 @@
         <div class="pilwrap ">
           <a href="#section-14" class="pilcrow">&#182;</a>
         </div>
-        <p>从当前Land视图查找元素，由于查找限定在了当前视图中，所以可以杜绝跨视图访问等问题</p>
+        <p>只有DOM ready后才会执行，非常安全</p>
+
       </div>
       
       <div class="code">
-        <pre>Land.prototype.$ = function (selector) {
-    return $(selector, this.element);
+        <pre>    $(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      view.el = view.element = $(selector);
+      <span class="hljs-keyword">if</span> (view.el.size()) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> callback === <span class="hljs-string">'function'</span>) {
+          callback(view);
+        }
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(selector + <span class="hljs-string">" block doesn't exist."</span>);
+      }
+    });
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   };</pre>
       </div>
       
@@ -268,16 +282,13 @@
         <div class="pilwrap ">
           <a href="#section-15" class="pilcrow">&#182;</a>
         </div>
-        <p>给前Land视图委托事件，采用事件委托可以很好的提升性能。<br />同时DOM的修改不影响事件的绑定，注册的逻辑可以比较固定。</p>
+        <p>从当前Land视图查找元素，由于查找限定在了当前视图中，所以可以杜绝跨视图访问等问题</p>
       </div>
       
       <div class="code">
-        <pre>Land.prototype.delegate = function (selector, events, handler) {
-    this.element.delegate(selector, events, handler);
-    return this;
-  };
-
-  global.Land = Land;</pre>
+        <pre>Land.prototype.$ = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(selector)</span> {</span>
+    <span class="hljs-keyword">return</span> $(selector, <span class="hljs-keyword">this</span>.el);
+  };</pre>
       </div>
       
     </li>
@@ -285,10 +296,18 @@
     <li id="section-16">
       <div class="docs">
         
-        <div class="pilwrap for-h2">
+        <div class="pilwrap ">
           <a href="#section-16" class="pilcrow">&#182;</a>
         </div>
-        <h2>Scape 数据对象</h2>
+        <p>给前Land视图委托事件，采用事件委托可以很好的提升性能。<br />同时DOM的修改不影响事件的绑定，注册的逻辑可以比较固定。</p>
+      </div>
+      
+      <div class="code">
+        <pre>Land.prototype.delegate = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(selector, events, handler)</span> {</span>
+    <span class="hljs-keyword">this</span>.el.delegate(selector, events, handler);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };
+</pre>
       </div>
       
     </li>
@@ -299,15 +318,12 @@
         <div class="pilwrap ">
           <a href="#section-17" class="pilcrow">&#182;</a>
         </div>
-        <p>数据层定义</p>
+        <p>挂载Land到全局</p>
+
       </div>
       
       <div class="code">
-        <pre>var Scape = Landscape.extend(EventProxy, {
-    initialize: function (data) {
-      this.data = data || {};
-    }
-  });</pre>
+        <pre><span class="hljs-attribute">  global.Land </span>=<span class="hljs-string"> Land;</span></pre>
       </div>
       
     </li>
@@ -315,20 +331,32 @@
     <li id="section-18">
       <div class="docs">
         
-        <div class="pilwrap ">
+        <div class="pilwrap for-h2">
           <a href="#section-18" class="pilcrow">&#182;</a>
         </div>
-        <p>ready方法以key绑定事件，如果该值已经被设置过，回调函数将会立即触发一次</p>
-      </div>
-      
-      <div class="code">
-        <pre>Scape.prototype.ready = function (key, callback) {
-    if (this.data.hasOwnProperty(key)) {
-      callback({"newVal": this.data[key]});
-    }
-    this.bind(key, callback);
-    return this;
-  };</pre>
+        <h2>Scape 数据对象</h2>
+
+<p>Scape数据对象是带有消息驱动的特殊对象，当对象的属性发生更改时，会触发属性同名的事件。</p>
+
+<p>Example:</p>
+
+<div class="highlight"><pre lang="">var scape = new Scape();
+scape.ready('name', function (event) {
+  // 当name属性被设置过，或发生更改时触发事件
+  // event.newVal 更改后的值
+  // event.oldVal 更改前的值 
+});
+// 设置属性name的值
+// 这会触发一次`name`事件
+scape.set('name', 'Jackson Tian');
+
+// onchange可以监听多个属性
+scape.onchange('name', 'age', function (name, age) {
+  // name和age属性都被设置过，或者设置过后，任一属性发生改变时触发
+});
+</pre></div>
+
+<p>Land在进行视图划分后，页面的模块与模块之间的关联交互无法完成。<br />但正是基于Scape数据对象的消息驱动特性，跨模块的关联行为可以很好的完成。<br />比如搜索框中的词汇发生变化时，相关的sidebar，接收到该事件，进行相应联动</p>
       </div>
       
     </li>
@@ -339,36 +367,12 @@
         <div class="pilwrap ">
           <a href="#section-19" class="pilcrow">&#182;</a>
         </div>
-        <p>当多个属性ready或者改变时触发</p>
+        <p>数据层定义</p>
       </div>
       
       <div class="code">
-        <pre>Scape.prototype.multi = function () {
-    var data = this.data;
-    var keys = [].slice.call(arguments, 0, -1);
-    var callback = arguments[arguments.length - 1];
-    if (typeof callback !== 'function') {
-      throw new Error('最后一个参数必须是函数');
-    }
-
-    var check = function () {
-      var trigger = true;
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        if (!data.hasOwnProperty(key)) {
-          trigger = false;
-          break;
-        }
-      }
-      if (trigger) {
-        var values = [];
-        for (var j = 0; j < keys.length; j++) {
-          values.push(data[keys[j]]);
-        }
-        callback.apply(null, values);
-      }
-    };
-</pre>
+        <pre><span class="hljs-keyword">var</span> Scape = Landscape.extend(EventProxy, {
+    initialize: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span> {</span></pre>
       </div>
       
     </li>
@@ -379,13 +383,14 @@
         <div class="pilwrap ">
           <a href="#section-20" class="pilcrow">&#182;</a>
         </div>
-        <p>立即检查一次</p>
+        <p>内部维护的对象</p>
 
       </div>
       
       <div class="code">
-        <pre>    check();
-</pre>
+        <pre>      this.<span class="hljs-typedef"><span class="hljs-keyword">data</span> = <span class="hljs-keyword">data</span> || <span class="hljs-container">{}</span>;</span>
+    }
+  });</pre>
       </div>
       
     </li>
@@ -396,14 +401,17 @@
         <div class="pilwrap ">
           <a href="#section-21" class="pilcrow">&#182;</a>
         </div>
-        <p>为选中的属性绑定事件</p>
-
+        <p>ready方法以key绑定事件，如果该值已经被设置过，回调函数将会立即触发一次</p>
       </div>
       
       <div class="code">
-        <pre>    for (var k = 0; k < keys.length; k++) {
-      this.bind(keys[k], check);
-    }</pre>
+        <pre>Scape.prototype.ready = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(key, callback)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.data.hasOwnProperty(key)) {
+      callback({<span class="hljs-string">"newVal"</span>: <span class="hljs-keyword">this</span>.data[key]});
+    }
+    <span class="hljs-keyword">this</span>.bind(key, callback);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };</pre>
       </div>
       
     </li>
@@ -414,13 +422,18 @@
         <div class="pilwrap ">
           <a href="#section-22" class="pilcrow">&#182;</a>
         </div>
-        <p>for chain call</p>
-
+        <p>当多个属性ready或者改变时触发</p>
       </div>
       
       <div class="code">
-        <pre>    return this;
-  };</pre>
+        <pre>Scape.prototype.onchange = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> data = <span class="hljs-keyword">this</span>.data;
+    <span class="hljs-keyword">var</span> keys = [].slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">1</span>);
+    <span class="hljs-keyword">var</span> callback = <span class="hljs-built_in">arguments</span>[<span class="hljs-built_in">arguments</span>.length - <span class="hljs-number">1</span>];
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> callback !== <span class="hljs-string">'function'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'最后一个参数必须是函数'</span>);
+    }
+</pre>
       </div>
       
     </li>
@@ -431,16 +444,21 @@
         <div class="pilwrap ">
           <a href="#section-23" class="pilcrow">&#182;</a>
         </div>
-        <p>设置数据到Scape对象上，会以key触发一个事件。传递值为oldVal和newVal，新旧值</p>
+        <p>检查是否所有监听的属性都存在</p>
+
       </div>
       
       <div class="code">
-        <pre>Scape.prototype.set = function (key, value) {
-    var oldValue = this.data[key];
-    this.data[key] = value;
-    this.fire(key, {"oldVal": oldValue, "newVal": value});
-    return this;
-  };</pre>
+        <pre>    <span class="hljs-keyword">var</span> check = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+      <span class="hljs-keyword">var</span> trigger = <span class="hljs-literal">true</span>;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; keys.length; i++) {
+        <span class="hljs-keyword">var</span> key = keys[i];
+        <span class="hljs-keyword">if</span> (!data.hasOwnProperty(key)) {
+          trigger = <span class="hljs-literal">false</span>;
+          <span class="hljs-keyword">break</span>;
+        }
+      }
+      <span class="hljs-keyword">if</span> (trigger) {</pre>
       </div>
       
     </li>
@@ -451,14 +469,19 @@
         <div class="pilwrap ">
           <a href="#section-24" class="pilcrow">&#182;</a>
         </div>
-        <p>获取数据对象的属性值<br />如果传入formatter函数，则返回格式化的函数</p>
+        <p>如果触发，收集属性</p>
+
       </div>
       
       <div class="code">
-        <pre>Scape.prototype.get = function (key, formatter) {
-    var val = key ? this.data[key] : this.data;
-    return (typeof formatter === 'function') ? formatter(val) : val;
-  };</pre>
+        <pre>        var <span class="hljs-keyword">values</span> = [];
+        <span class="hljs-keyword">for</span> (var j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-keyword">keys</span>.<span class="hljs-keyword">length</span>; j++) {
+          <span class="hljs-keyword">values</span>.<span class="hljs-keyword">push</span>(data[<span class="hljs-keyword">keys</span>[j]]);
+        }
+        callback.apply(null, <span class="hljs-keyword">values</span>);
+      }
+    };
+</pre>
       </div>
       
     </li>
@@ -469,20 +492,125 @@
         <div class="pilwrap ">
           <a href="#section-25" class="pilcrow">&#182;</a>
         </div>
+        <p>立即检查一次</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    <span class="hljs-keyword">check</span>();
+</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-26">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-26" class="pilcrow">&#182;</a>
+        </div>
+        <p>为选中的属性绑定事件</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    <span class="hljs-keyword">for</span> (var k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-keyword">keys</span>.<span class="hljs-keyword">length</span>; k++) {
+      this.<span class="hljs-keyword">bind</span>(<span class="hljs-keyword">keys</span>[k], check);
+    }</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-27">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-27" class="pilcrow">&#182;</a>
+        </div>
+        <p>for chain call</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-28">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-28" class="pilcrow">&#182;</a>
+        </div>
+        <p>设置数据到Scape对象上，会以key触发一个事件。传递值为oldVal和newVal，新旧值</p>
+      </div>
+      
+      <div class="code">
+        <pre>Scape.prototype.<span class="hljs-keyword">set</span> = function (key, <span class="hljs-keyword">value</span>) {
+    <span class="hljs-keyword">var</span> oldValue = <span class="hljs-keyword">this</span>.data[key];
+    <span class="hljs-keyword">this</span>.data[key] = <span class="hljs-keyword">value</span>;
+    <span class="hljs-keyword">this</span>.fire(key, {<span class="hljs-string">"oldVal"</span>: oldValue, <span class="hljs-string">"newVal"</span>: <span class="hljs-keyword">value</span>});
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-29">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-29" class="pilcrow">&#182;</a>
+        </div>
+        <p>获取数据对象的属性值<br />如果传入formatter函数，则返回格式化的函数</p>
+      </div>
+      
+      <div class="code">
+        <pre>Scape.prototype.<span class="hljs-keyword">get</span> = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(key, formatter)</span> {</span>
+    <span class="hljs-keyword">var</span> val = key ? <span class="hljs-keyword">this</span>.data[key] : <span class="hljs-keyword">this</span>.data;
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">typeof</span> formatter === <span class="hljs-string">'function'</span>) ? formatter(val) : val;
+  };</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-30">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-30" class="pilcrow">&#182;</a>
+        </div>
         <p>删除数据对象的属性值</p>
       </div>
       
       <div class="code">
-        <pre>Scape.prototype.remove = function (key, callback) {
-    delete this.data[key];
-    if (callback) {
-      this.unbind(key, callback);
+        <pre>Scape.prototype.remove = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(key, callback)</span> {</span>
+    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.data[key];</pre>
+      </div>
+      
+    </li>
+  
+    <li id="section-31">
+      <div class="docs">
+        
+        <div class="pilwrap ">
+          <a href="#section-31" class="pilcrow">&#182;</a>
+        </div>
+        <p>卸载绑定的事件</p>
+
+      </div>
+      
+      <div class="code">
+        <pre>    <span class="hljs-keyword">if</span> (callback) {
+      <span class="hljs-keyword">this</span>.unbind(key, callback);
     }
-    return this;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
   };
 
-  global.Scape = Scape;
-}(window));</pre>
+  <span class="hljs-built_in">global</span>.Scape = Scape;
+}(<span class="hljs-built_in">window</span>));</pre>
       </div>
       
     </li>
