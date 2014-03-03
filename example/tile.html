@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script type="text/javascript" src="../deps/eventproxy-0.3.0.js"></script>
+  <script type="text/javascript" src="../deps/jquery-1.11.0.js"></script>
+  <script type="text/javascript" src="../deps/underscore-1.5.0.js"></script>
+  <script type="text/javascript" src="../lib/landscape.js"></script>
+  <script type="text/javascript" src="../lib/tile.js"></script>
+</head>
+<body>
+  <script class="tpl" type="text/template">
+    Hello, <%=name%>
+  </script>
+  <div id="tile">
+    
+  </div>
+  <script type="text/javascript">
+    var tile = new Tile($('#tile'), $('.tpl').html(), {name: 'Jackson Tian'});
+    setTimeout(function () {
+      tile.data.set('name', 'Su qian');
+    }, 2000);
+    setTimeout(function () {
+      tile.data.set('name', 'Su qian2');
+    }, 4000);
+  </script>
+</body>
+</html>

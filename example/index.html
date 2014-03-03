@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script type="text/javascript" src="../deps/eventproxy-0.3.0.js"></script>
+  <script type="text/javascript" src="../deps/jquery-1.11.0.js"></script>
+  <script type="text/javascript" src="../lib/landscape.js"></script>
+  <script type="text/javascript">
+    var app = new Scape();
+  </script>
+</head>
+<body>
+  <div id="main">
+    <input type="text" ld-bind="name" />
+    <div class="output">
+    </div>
+  </div>
+  <script type="text/javascript">
+  Land('#main', function (view) {
+    view.bind(app);
+    app.bind('name', function (event) {
+      view.$('.output').html('Hello ' + event.newVal);
+    });
+  });
+  </script>
+</body>
+</html>
